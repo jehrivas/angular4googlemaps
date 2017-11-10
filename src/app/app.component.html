@@ -1,0 +1,49 @@
+<app-navbar></app-navbar>
+
+
+<div class="container main-container">
+    <div class="row">
+        <div class="col-md-4">
+            <div *ngIf="marcadorSel">
+                <h5>
+                    marcador
+                </h5>
+                <hr>
+                <div class="form-group">
+                    <label for="">Titulo</label>
+                    <input [(ngModel)]="marcadorSel.titulo" type="text" class="form-control" name="titulo">
+                </div>
+                <div class="form-group">
+                    <label for="">Descripción</label>
+                    <textarea [(ngModel)]="marcadorSel.desc" type="text" name="desc" class="form-control" rows="5"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="">¿Se puede mover?</label>
+                    <select class="form-control" [(ngModel)]="draggable" name="draggable" (change)="cambiarDraggable()">
+                      <option value="1">Si</option>
+                      <option value="0">No</option>
+                    </select>
+                </div>
+
+                <button (click)="_ms.borrarMarcador()" type="button" class="btn btn-outline-primary btn-block">
+                  Guardar Cambios
+                </button>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <agm-map [zoom]="zoom" [latitude]="lat" [longitude]="lng" (mapClick)="clickMapa( $event )">
+                <agm-marker [latitude]="marcador.lat" [longitude]="marcador.lng" *ngFor="let marcador of _ms.marcadores; let i = index" [title]="marcador.title" [markerDraggable]="marcador.draggable" (markerClick)="clickMarcador( marcador, i )" (dragEnd)="dragEndMarcador( marcador, $event)">
+                    <agm-snazzy-info-window [maxWidth]="400" [latitude]="lat" [longitude]="lng" [closeWhenOthersOpen]="true">
+                        <ng-template>
+                            <strong>{{ marcador.titulo }}</strong>
+                            <p *ngIf="marcador.desc">{{ marcador.desc }}</p>
+                            <p>
+                                <a (click)="_ms.borrarMarcador(i)" class="text-danger puntero">Borrar marcador</a>
+                            </p>
+                        </ng-template>
+                    </agm-snazzy-info-window>
+                </agm-marker>
+            </agm-map>
+        </div>
+    </div>
+</div>
